@@ -31,6 +31,8 @@ async function createCourse() {
 }
 
 async function getCourses() {
+    const pageNumber = 2;
+    const pageSize = 10;
     // Comparison Operators                             Logical Operators
     // eq (equal)                                           or
     // ne (not eqaul)                                       and
@@ -41,13 +43,17 @@ async function getCourses() {
     // in
     // nin (not in)
     const courses = await Course
-        .find({ author: 'Jackson', isPublished: true }) // .find() conditions to return document if met
-        // .find({ price: { $gte: 10, $lte: 20 } })        will find documents that have prices that are greater than 10 or less than 20
-        // .find({ price: { $in: [10, 15, 20] } })         will documents that have prices that are contained in the array
-        // .find({ author: /^Mosh/ig })                    will filter authors that have the given regex
+
+        .find({ author: 'Jackson', isPublished: true })     // .find() conditions to return document if met
+        // .find({ price: { $gte: 10, $lte: 20 } })         will find documents that have prices that are greater than 10 or less than 20
+        // .find({ price: { $in: [10, 15, 20] } })          will documents that have prices that are contained in the array
+        // .find({ author: /^Mosh/ig })                     will filter authors that have the given regex
         // .or([{ author: 'Jackson' }, { isPublished: true }])
-        .limit(10)                                      // .limit() limit of how many documents to return
-        .sort({ name: 1 })                              // .sort() 1 for acending and -1 for decending
-        .select({ name: 1, tags: 1 });                  // .select() keys to include in return
+        .skip((pageNumber - 1) * pageSize)                                             // .limit() limit of how many documents to return
+        .limit(pageSize)
+        .sort({ name: 1 })                                  // .sort() 1 for acending and -1 for decending
+        // .select({ name: 1, tags: 1 });                   // .select() keys to include in return
+        .count();                                           // counts the documents
     console.log(courses);
 }
+getCourses();
