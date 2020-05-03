@@ -5,15 +5,32 @@ mongoose.connect('mongodb://localhost/mongo-exercise', { useNewUrlParser: true, 
     .catch(err => console.log('Error: ', err));
 
 const courseSchema = new mongoose.Schema({
+    name: { type: String, required: true },
     tags: [String],
     date: Date,
-    name: String,
     author: String,
     isPublished: Boolean,
     price: Number
 });
 
 const Course = mongoose.model('Course', courseSchema);
+
+async function createCourse() {
+    const course = new Course({
+        tags: ['Frontend', 'Backend'],
+        date: new Date,
+        author: 'Jackson',
+        isPublished: true,
+        price: 10
+    });
+    try {
+        const result = await course.save();
+        console.log(result);
+    }
+    catch(err) {
+        console.log(err.message);
+    }
+}
 
 async function getCourses() {
     return await Course
@@ -27,7 +44,7 @@ async function getCourses() {
         .select({ name: 1, author: 1, price: 1, tags: 1 });
 }
 
-async function run() {
+async function showCourses() {
     const courses = await getCourses();
     console.log(courses);
 }
@@ -49,4 +66,4 @@ async function removeCourse(id) {
     const course = await Course.findByIdAndRemove(id);
     console.log(course);
 }
-removeCourse('5eacdbe29c8cf057674ea400');
+createCourse();

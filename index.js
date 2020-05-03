@@ -30,6 +30,7 @@ async function createCourse() {
     console.log(result);
 }
 
+
 async function getCourses() {
     const pageNumber = 2;
     const pageSize = 10;
