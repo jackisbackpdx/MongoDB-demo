@@ -5,21 +5,47 @@ mongoose.connect('mongodb://localhost/mongo-exercise', { useNewUrlParser: true, 
     .catch(err => console.log('Error: ', err));
 
 const courseSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    tags: [String],
+    name: { 
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 255,
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ['web', 'mobile', 'network']
+    },
+    tags: {
+        type: Array,
+        validate: {
+            validator: function(v) {
+                return v && v.length > 0;
+            },
+            message: 'A course should have at least one tag.'
+
+        }
+    },
     date: Date,
     author: String,
     isPublished: Boolean,
-    price: Number
+    price: {
+        type: Number,
+        required: function() { return this.isPublished; },
+        min: 10,
+        max: 200
+    }
 });
 
 const Course = mongoose.model('Course', courseSchema);
 
 async function createCourse() {
     const course = new Course({
-        tags: ['Frontend', 'Backend'],
-        date: new Date,
+        name: 'Intermediate Angular Course',
         author: 'Jackson',
+        category: 'web',
+        date: new Date,
+        tags: null,
         isPublished: true,
         price: 10
     });
@@ -40,7 +66,7 @@ async function getCourses() {
             { price: { $gte: 15 } },
             { name: /.*by.*/i }
         ])
-        .sort({ price: 1 })
+        .sort({ price: -1 })
         .select({ name: 1, author: 1, price: 1, tags: 1 });
 }
 

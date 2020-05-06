@@ -1,0 +1,22 @@
+* {
+    font-family: 'Open Sans', sans-serif;
+}
+
+fieldset {
+    width: 200px;
+    text-align: center;
+    margin: 0 auto;
+    background-color: rgb(218, 202, 57);
+    border-radius: 5px;
+}
+
+legend:first-of-type {
+    border-radius: 5px;
+    background-color: blue;
+    color: white;
+    border: 1px solid black;
+}
+
+button {
+    margin-top: 5px;
+}
